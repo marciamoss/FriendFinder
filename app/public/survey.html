@@ -10,7 +10,7 @@
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <style>
-        .imgwidth{
+        #imgwidth{
             width:100%;
         }
     </style>
@@ -42,7 +42,6 @@
                                     <h3><strong>Question 1</strong></h3>
                                     <h4>I make friends easily.</h4>
                                     <select class="chosen-select" id="q1">
-                                        <option value=""></option>
                                         <option value="1">1 (Strongly Disagree)</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -54,7 +53,6 @@
                                     <h3><strong>Question 2</strong></h3>
                                     <h4>I love large parties.</h4>
                                     <select class="chosen-select" id="q2">
-                                        <option value=""></option>
                                         <option value="1">1 (Strongly Disagree)</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -66,7 +64,6 @@
                                         <h3><strong>Question 3</strong></h3>
                                         <h4>I experience my emotions intensely.</h4>
                                         <select class="chosen-select" id="q3">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -78,7 +75,6 @@
                                         <h3><strong>Question 4</strong></h3>
                                         <h4>I prefer variety to routine.</h4>
                                         <select class="chosen-select" id="q4">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -90,7 +86,6 @@
                                         <h3><strong>Question 5</strong></h3>
                                         <h4>I love excitement & seek adventure.</h4>
                                         <select class="chosen-select" id="q5">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -102,7 +97,6 @@
                                         <h3><strong>Question 6</strong></h3>
                                         <h4>I like to solve complex problems.</h4>
                                         <select class="chosen-select" id="q6">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -114,7 +108,6 @@
                                         <h3><strong>Question 7</strong></h3>
                                         <h4>I make people feel welcome.</h4>
                                         <select class="chosen-select" id="q7">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -126,7 +119,6 @@
                                         <h3><strong>Question 8</strong></h3>
                                         <h4>I am afraid that I will do the wrong thing.</h4>
                                         <select class="chosen-select" id="q8">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -138,7 +130,6 @@
                                         <h3><strong>Question 9</strong></h3>
                                         <h4>I become overwhelmed by events.</h4>
                                         <select class="chosen-select" id="q9">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -151,7 +142,6 @@
                                         <h3><strong>Question 10</strong></h3>
                                         <h4>Bottom line is all the above questions are BS, you will just know it when you feel it, emotions can't be predetermined or quantified.</h4>
                                         <select class="chosen-select" id="q10">
-                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -200,16 +190,30 @@
             <footer class="footer">
                 <div class="container">
                     <p>
-                    <a href="/api/friends">API Friends List</a> |
-                    <a href="/">GitHub Repo</a>
+                    <a href="/api/friends" target="blank">API Friends List</a> |
+                    <a href="https://github.com/marciamoss/FriendFinder.git" target="blank">GitHub Repo</a>
                 </div>
             </footer>
         </div>
+
         <script type="text/javascript">
+
+            //keep the submit disabled until name and photo link are entered
+            $("#add-btn").attr('disabled', 'disabled');
+            //check if name and photo link are entered
+            $("#myForm").keyup(function(){
+                if(($("#name").val().trim() =='') || $("#photo").val().trim() ==''){
+                    $("#add-btn").attr('disabled', 'disabled');
+                }else{
+                    $('#add-btn').removeAttr('disabled');
+                    
+                }
+            });
+
             // create constructor from the values read from the text box
             $("#add-btn").on("click", function(event) {
                 event.preventDefault();
-                $(".modal-body").empty();
+                $(".modal-body, .modal-title").empty();
                 var qval=[];
                 for (var i=1;i<=10;i++){
                     qval.push($("#q"+i+" option:selected").val());
@@ -223,20 +227,30 @@
                 
                 $("#myForm").find(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
              
-              
-                //post the data to the server
-                $.post("/api/friends", aboutPerson)
-                    .then(function(data) {
+                //testing for image source
+                $.get(aboutPerson.photo).done(function() { 
+                    
+                    //If image exists post the data to the server
+                    $.post("/api/friends", aboutPerson)
+                        .then(function(data) {
+                        $("#add-btn").attr('disabled', 'disabled');    
+                            
+                    });
+
+                    //Get the compatible picture
+                    $.get("/api/friends", function(data) {
+
+                        $(".modal-title").append(`${data[(data.length)-1].compatible.name}`);
+                        $(".modal-body").append(`<img id='imgwidth' src=${data[(data.length)-1].compatible.photo}>`);
                         
-                });
+                    });
 
-                //Get the compatible picture
-                $.get("/api/friends", function(data) {
-
-                   $(".modal-title").append(`${data[(data.length)-1].compatible.name}`);
-                   $(".modal-body").append(`<img class='imgwidth' src=${data[(data.length)-1].compatible.photo}>`);
-
-                });
+                }).fail(function() { 
+                    
+                    $(".modal-body").append("image source is not valid try again");
+                    $("#add-btn").attr('disabled', 'disabled');    
+                })
+                
             });
         
         </script>

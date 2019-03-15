@@ -1,4 +1,4 @@
-const apiRoutes = function (app,path,fs){
+var apiRoutes = function (app,path,fs){
 
     const persons=[];let compatible;
 
