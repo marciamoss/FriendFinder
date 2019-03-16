@@ -40,7 +40,7 @@ var apiRoutes = function (app,path,fs,validUrl){
     
             }else{
                 //adding the first data if the array is empty
-                persons.push({compatible:{"name":"Boo","photo":"https://images.dog.ceo/breeds/kuvasz/n02104029_2504.jpg","scores":['2', '3', '5', '1', '3', '', '4', '2', '4', '4']}}); 
+                persons.push({compatible:{"name":"Boo","photo":"https://images.dog.ceo/breeds/kuvasz/n02104029_2504.jpg","scores":['2', '3', '5', '1', '3', '1', '4', '2', '4', '4']}}); 
             }
     
             compatible.shift();
@@ -63,7 +63,7 @@ var apiRoutes = function (app,path,fs,validUrl){
         } 
         else {
             if(persons.length<1){
-                persons.push({"name":"Boo","photo":"https://images.dog.ceo/breeds/kuvasz/n02104029_2504.jpg","scores":['2', '3', '5', '1', '3', '', '4', '2', '4', '4']}); 
+                persons.push({"name":"Boo","photo":"https://images.dog.ceo/breeds/kuvasz/n02104029_2504.jpg","scores":['2', '3', '5', '1', '3', '1', '4', '2', '4', '4']}); 
             }
 
             for(var i=0;i<persons.length;i++){
