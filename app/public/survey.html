@@ -42,6 +42,7 @@
                                     <h3><strong>Question 1</strong></h3>
                                     <h4>I make friends easily.</h4>
                                     <select class="chosen-select" id="q1">
+                                        <option value=""></option>
                                         <option value="1">1 (Strongly Disagree)</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -53,6 +54,7 @@
                                     <h3><strong>Question 2</strong></h3>
                                     <h4>I love large parties.</h4>
                                     <select class="chosen-select" id="q2">
+                                        <option value=""></option>
                                         <option value="1">1 (Strongly Disagree)</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -64,6 +66,7 @@
                                         <h3><strong>Question 3</strong></h3>
                                         <h4>I experience my emotions intensely.</h4>
                                         <select class="chosen-select" id="q3">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -75,6 +78,7 @@
                                         <h3><strong>Question 4</strong></h3>
                                         <h4>I prefer variety to routine.</h4>
                                         <select class="chosen-select" id="q4">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -86,6 +90,7 @@
                                         <h3><strong>Question 5</strong></h3>
                                         <h4>I love excitement & seek adventure.</h4>
                                         <select class="chosen-select" id="q5">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -97,6 +102,7 @@
                                         <h3><strong>Question 6</strong></h3>
                                         <h4>I like to solve complex problems.</h4>
                                         <select class="chosen-select" id="q6">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -108,6 +114,7 @@
                                         <h3><strong>Question 7</strong></h3>
                                         <h4>I make people feel welcome.</h4>
                                         <select class="chosen-select" id="q7">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -119,6 +126,7 @@
                                         <h3><strong>Question 8</strong></h3>
                                         <h4>I am afraid that I will do the wrong thing.</h4>
                                         <select class="chosen-select" id="q8">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -130,6 +138,7 @@
                                         <h3><strong>Question 9</strong></h3>
                                         <h4>I become overwhelmed by events.</h4>
                                         <select class="chosen-select" id="q9">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -142,6 +151,7 @@
                                         <h3><strong>Question 10</strong></h3>
                                         <h4>Bottom line is all the above questions are BS, you will just know it when you feel it, emotions can't be predetermined or quantified.</h4>
                                         <select class="chosen-select" id="q10">
+                                            <option value=""></option>
                                             <option value="1">1 (Strongly Disagree)</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -202,7 +212,11 @@
             $("#add-btn").attr('disabled', 'disabled');
             //check if name and photo link are entered
             $("#myForm").keyup(function(){
-                if(($("#name").val().trim() =='') || $("#photo").val().trim() ==''){
+                if(($("#name").val().trim() =='') || $("#photo").val().trim() =='' || 
+                $("#q1 option:selected").val() == '' || $("#q2 option:selected").val() == '' || $("#q3 option:selected").val() == '' || 
+                $("#q4 option:selected").val() == '' || $("#q5 option:selected").val() == '' || $("#q6 option:selected").val() == '' || 
+                $("#q7 option:selected").val() == '' || $("#q8 option:selected").val() == '' || $("#q9 option:selected").val() == '' ||
+                $("#q10 option:selected").val() == ''){
                     $("#add-btn").attr('disabled', 'disabled');
                 }else{
                     $('#add-btn').removeAttr('disabled');
@@ -227,30 +241,26 @@
                 
                 $("#myForm").find(':input').not(':button, :submit, :reset, :hidden, :checkbox, :radio').val('');
              
-                //testing for image source
-                $.get(aboutPerson.photo).done(function() { 
+                //post the data to the server
+                $.post("/api/friends", aboutPerson)
+                    .then(function(data) {
+                    $("#add-btn").attr('disabled', 'disabled');    
+                        
+                });
+
+                //Get the compatible picture
+                $.get("/api/friends", function(data) {
+
                     
-                    //If image exists post the data to the server
-                    $.post("/api/friends", aboutPerson)
-                        .then(function(data) {
-                        $("#add-btn").attr('disabled', 'disabled');    
-                            
-                    });
-
-                    //Get the compatible picture
-                    $.get("/api/friends", function(data) {
-
+                    if(`${data[(data.length)-1].compatible.scores[0]}`!="NA"){
                         $(".modal-title").append(`${data[(data.length)-1].compatible.name}`);
                         $(".modal-body").append(`<img id='imgwidth' src=${data[(data.length)-1].compatible.photo}>`);
-                        
-                    });
-
-                }).fail(function() { 
+                    }else{
+                        $(".modal-body").append(`${data[(data.length)-1].compatible.name}`);
+                    }
                     
-                    $(".modal-body").append("image source is not valid try again");
-                    $("#add-btn").attr('disabled', 'disabled');    
-                })
-                
+                });
+
             });
         
         </script>

@@ -1,1 +1,0 @@
-, -[{"name":"ijiji","photo":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSx-wyJux560QwH7cscODPxaAF9cvgk35PmksCMK_otVLtOU-aDw"},{"compatible":{"name":"Boo","photo":"https://images.dog.ceo/breeds/kuvasz/n02104029_2504.jpg","scores":["2","3","5","1","3","","4","2","4","4"]}}]
